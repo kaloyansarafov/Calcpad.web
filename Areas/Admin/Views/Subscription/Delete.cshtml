@@ -1,18 +1,15 @@
-﻿@model TModel
+﻿@model SubscriptionPlanViewModel
 
 @{
-    Layout = null;
+ViewData["Title"] = "Delete Subscription Plan";
 }
 
-<!DOCTYPE html>
+<h1>Delete Subscription Plan</h1>
 
-<html>
-<head>
-    <title>title</title>
-</head>
-<body>
-<div>
-      
-</div>
-</body>
-</html>
+<form asp-action="Delete" method="post">
+    <input type="hidden" asp-for="Id" />
+    <p>Are you sure you want to delete this subscription plan?</p>
+    <div class="form-group">
+        <input type="submit" value="Delete" class="btn btn-danger" />
+    </div>
+</form>
