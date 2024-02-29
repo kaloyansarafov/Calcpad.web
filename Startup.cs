@@ -114,6 +114,11 @@ namespace Calcpad.web
                 endpoints.MapControllerRoute(
                     name: "default",
                     pattern: "{controller=Home}/{action=Index}/{id?}");
+                
+                endpoints.MapControllerRoute(
+                    name: "default",
+                    pattern: "{controller=Subscription}/{action=Index}/{id?}");
+                
                 endpoints.MapRazorPages();
 
                 endpoints.MapHub<CalculatorHub>("/calculate");

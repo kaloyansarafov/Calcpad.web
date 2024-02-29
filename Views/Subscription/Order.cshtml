@@ -1,0 +1,17 @@
+﻿@model Calcpad.web.Data.Models.Order
+
+<h1>Order Subscription</h1>
+
+<form asp-action="Order">
+    <div class="form-group">
+        <label asp-for="PlanId" class="control-label"></label>
+        <input asp-for="PlanId" class="form-control" />
+    </div>
+    <div class="form-group">
+        <label asp-for="User.Id" class="control-label"></label>
+        <input asp-for="User.Id" class="form-control" />
+    </div>
+    <div class="form-group">
+        <input type="submit" value="Order" class="btn btn-primary" />
+    </div>
+</form>
