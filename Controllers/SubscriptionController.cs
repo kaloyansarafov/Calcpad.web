@@ -37,8 +37,11 @@ namespace Calcpad.web.Controllers
             {
                 return NotFound();
             }
+            
+            var order = await _context.Orders
+                .FirstOrDefaultAsync(m => m.PlanId == id);
 
-            return View(subscriptionPlan);
+            return View(order);
         }
 
         // POST: Subscription/Order/5
