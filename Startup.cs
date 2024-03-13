@@ -63,6 +63,7 @@ namespace Calcpad.web
             services.AddScoped<IWorksheetService, WorksheetService>();
             services.AddScoped<ITopicService, TopicService>();
             services.AddScoped<IArticleService, ArticleService>();
+            services.AddScoped<ISubscriptionPlanService, SubscriptionPlanService>();
             services.AddSingleton<IReCaptchaService, ReCapthaService>();
         }
 

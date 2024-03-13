@@ -2,6 +2,18 @@
 
 <h1>Subscription Plans</h1>
 
+<p>Gain access to worksheets submitted by other users!</p>
+@if (User.Identity.IsAuthenticated && User.IsInRole(Constants.RoleNames.Administrator))
+{
+<p class="ml-4">
+    <a asp-area="Admin"
+       asp-controller="Subscription"
+       asp-action="Add"
+       title="Add new Subscription">
+        <i class="icofont-ui-add mr-2"></i>Add new subscription
+    </a>
+</p>
+}
 <table class="table">
     <thead>
     <tr>
