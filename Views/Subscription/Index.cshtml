@@ -1,9 +1,13 @@
 ﻿@model IEnumerable<Calcpad.web.Data.Models.SubscriptionPlan>
 
+@{
+    bool isAdmin = User.Identity.IsAuthenticated && User.IsInRole(Constants.RoleNames.Administrator);
+}
+
 <h1>Subscription Plans</h1>
 
 <p>Gain access to worksheets submitted by other users!</p>
-@if (User.Identity.IsAuthenticated && User.IsInRole(Constants.RoleNames.Administrator))
+@if (isAdmin)
 {
 <p class="ml-4">
     <a asp-area="Admin"
@@ -32,6 +36,25 @@
         <td>@item.Price</td>
         <td>
             <a asp-action="Order" asp-route-id="@item.Id">Order</a>
+            @if (isAdmin)
+            {
+                <a asp-area="Admin"
+                   asp-controller="Subscription"
+                   asp-action="Update"
+                   asp-route-id="@item.Id"
+                   title="Edit">
+                    <i class="icofont-pencil-alt-2 mr-2 h5"></i>
+                </a>
+                
+                <a asp-area="Admin"
+                   asp-controller="Subscription"
+                   asp-action="Delete"
+                   asp-route-id="@item.Id"
+                   title="Delete"
+                   class="text-danger">
+                <i class="icofont-ui-delete mr-2 h5"></i>
+                </a>
+            }
         </td>
     </tr>
     }
