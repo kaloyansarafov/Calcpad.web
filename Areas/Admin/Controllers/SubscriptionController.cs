@@ -26,7 +26,7 @@ namespace Calcpad.web.Areas.Admin.Controllers
         public async Task<IActionResult> Add()
         {
             SubscriptionPlanViewModel model = new();
-            return View(nameof(Update), model);
+            return View(nameof(Add), model);
         }
 
         [HttpGet]
