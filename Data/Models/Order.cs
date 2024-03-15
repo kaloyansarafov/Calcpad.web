@@ -8,9 +8,10 @@ namespace Calcpad.web.Data.Models
         public int Id { get; set; }
 
         public ApplicationUser User { get; set; }
-
-        public int PlanId { get; set; }
+        
         [Required]
+        public int PlanId { get; set; }
+        
         public SubscriptionPlan Plan { get; set; }
 
         [Required]
