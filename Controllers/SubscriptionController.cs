@@ -1,19 +1,26 @@
-﻿using System.Linq;
+﻿using System;
+using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Calcpad.web.Data;
 using Calcpad.web.Data.Models;
+using Calcpad.web.Data.Services;
+using Microsoft.AspNetCore.Identity;
 
 namespace Calcpad.web.Controllers
 {
     public class SubscriptionController : Controller
     {
         private readonly ApplicationDbContext _context;
+        private readonly UserManager<ApplicationUser> _userManager;
+        private readonly IOrderService _orderService;
 
-        public SubscriptionController(ApplicationDbContext context)
+        public SubscriptionController(ApplicationDbContext context, UserManager<ApplicationUser> userManager, IOrderService orderService)
         {
             _context = context;
+            _userManager = userManager;
+            _orderService = orderService;
         }
 
         // GET: Subscription
@@ -37,29 +44,44 @@ namespace Calcpad.web.Controllers
             {
                 return NotFound();
             }
-            
-            var order = await _context.Orders
-                .FirstOrDefaultAsync(m => m.PlanId == id);
+    
+            var order = new Order
+            {
+                PlanId = id.Value,
+                User = await _userManager.GetUserAsync(User)
+            };
 
             return View(order);
         }
 
-        // POST: Subscription/Order/5
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Order(int id, [Bind("Id,UserId,PlanId,CreatedOn,ActivatedOn,ExpiresOn")] Order order)
+        public async Task<IActionResult> Order(int id, [Bind("ActivatedOn")] Order order)
         {
-            if (id != order.PlanId)
+            order.PlanId = id;
+            order.Plan = await _context.SubscriptionPlans.FirstOrDefaultAsync(m => m.Id == id);
+            order.User = await _userManager.GetUserAsync(User);
+            order.CreatedOn = DateTime.Now;
+            order.ExpiresOn = order.ActivatedOn.AddMonths(1);
+
+            var invoice = new Invoice
             {
-                return NotFound();
-            }
+                InvoiceNumber = new Random().Next(1000, 9999),
+                NetAmmount = order.Plan.Price,
+                TaxAmmount = order.Plan.Price * 0.21m,
+                CreatedDate = DateTime.Now,
+                PaymentDate = order.ActivatedOn,
+                IsCanceled = false
+            };
+
+            order.Invoice = invoice;
 
             if (ModelState.IsValid)
             {
                 try
                 {
-                    _context.Add(order);
-                    await _context.SaveChangesAsync();
+                    await _orderService.AddAsync(order);
+
                     return RedirectToAction(nameof(Index));
                 }
                 catch (DbUpdateConcurrencyException)
