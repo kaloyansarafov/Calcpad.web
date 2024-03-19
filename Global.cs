@@ -6,6 +6,7 @@
         {
             public const string Administrator = "Admin";
             public const string Developer = "Developer";
+            public const string Subscriber = "Subscriber";
             public const string Member = "Member";
         }
     }

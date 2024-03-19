@@ -82,6 +82,12 @@ namespace Calcpad.web.Controllers
                 {
                     await _orderService.AddAsync(order);
 
+                    if (order.ActivatedOn.Date >= DateTime.Now.Date)
+                    {
+                        var user = await _userManager.GetUserAsync(User);
+                        await _userManager.AddToRoleAsync(user, "Subscriber");
+                    }
+
                     return RedirectToAction(nameof(Index));
                 }
                 catch (DbUpdateConcurrencyException)
