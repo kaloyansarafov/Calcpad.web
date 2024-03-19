@@ -22,6 +22,7 @@ namespace Calcpad.web.Data.Models
         public DateTime ExpiresOn { get; set; }
 
         public Invoice Invoice { get; set; }
-
+        
+        public bool IsActive { get; set; }
     }
 }

@@ -28,6 +28,7 @@ public class SubscriptionExpirationService : IHostedService, IDisposable
 
     private void DoWork(object state)
     {
+        Console.WriteLine($"SubscriptionExpirationService is working. Time: {DateTime.UtcNow}");
         using var scope = _serviceProvider.CreateScope();
         var context = scope.ServiceProvider.GetRequiredService<ApplicationDbContext>();
         var userManager = scope.ServiceProvider.GetRequiredService<UserManager<ApplicationUser>>();
