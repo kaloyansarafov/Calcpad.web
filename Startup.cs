@@ -66,6 +66,8 @@ namespace Calcpad.web
             services.AddScoped<ISubscriptionPlanService, SubscriptionPlanService>();
             services.AddScoped<IOrderService, OrderService>();
             services.AddSingleton<IReCaptchaService, ReCapthaService>();
+            
+            services.AddHostedService<SubscriptionExpirationService>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
