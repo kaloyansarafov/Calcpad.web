@@ -7,6 +7,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using Calcpad.web.Data;
 using Calcpad.web.Data.Models;
+using Calcpad.web.Data.Services;
 using Calcpad.web.Global;
 using Microsoft.EntityFrameworkCore;
 
@@ -32,14 +33,17 @@ public class SubscriptionExpirationService : IHostedService, IDisposable
         using var scope = _serviceProvider.CreateScope();
         var context = scope.ServiceProvider.GetRequiredService<ApplicationDbContext>();
         var userManager = scope.ServiceProvider.GetRequiredService<UserManager<ApplicationUser>>();
+        var orderService = scope.ServiceProvider.GetRequiredService<IOrderService>();
 
         var expiredOrders = context.Orders
-            .Where(o => o.ExpiresOn.Date == DateTime.UtcNow.Date.AddDays(-1)).Include(order => order.User)
+            .Where(o => o.ExpiresOn.Date == DateTime.UtcNow.Date.AddDays(-1) && o.IsActive == true).Include(order => order.User)
             .ToList();
 
         foreach (var order in expiredOrders)
         {
             userManager.RemoveFromRoleAsync(order.User, Constants.RoleNames.Subscriber).Wait();
+            order.IsActive = false;
+            orderService.UpdateAsync(order).Wait();
         }
     }
 

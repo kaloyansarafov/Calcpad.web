@@ -63,6 +63,7 @@ namespace Calcpad.web.Controllers
             order.User = await _userManager.GetUserAsync(User);
             order.CreatedOn = DateTime.Now;
             order.ExpiresOn = order.ActivatedOn.AddMonths(1);
+            order.IsActive = false;
 
             var invoice = new Invoice
             {
@@ -86,6 +87,9 @@ namespace Calcpad.web.Controllers
                     {
                         var user = await _userManager.GetUserAsync(User);
                         await _userManager.AddToRoleAsync(user, "Subscriber");
+                        
+                        order.IsActive = true;
+                        await _orderService.UpdateAsync(order);
                     }
 
                     return RedirectToAction(nameof(Index));
