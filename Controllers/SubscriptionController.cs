@@ -76,6 +76,16 @@ namespace Calcpad.web.Controllers
             };
 
             order.Invoice = invoice;
+            
+            // Check if the user is already a subscriber
+            var activeOrder = await _context.Orders
+                .Where(o => o.User.Id == order.User.Id && o.IsActive == true)
+                .FirstOrDefaultAsync();
+            if (activeOrder != null)
+            {
+                ModelState.AddModelError("ActivatedOn", "You already have an active subscription.");
+                return View(order);
+            }
 
             if (ModelState.IsValid)
             {

@@ -42,7 +42,7 @@ public class SubscriptionExpirationService : IHostedService, IDisposable
     private void HandleStartingSubscriptions(ApplicationDbContext context, UserManager<ApplicationUser> userManager, IOrderService orderService)
     {
         var startingOrders = context.Orders
-            .Where(o => o.ActivatedOn.Date == DateTime.UtcNow.Date && o.IsActive == false).Include(order => order.User)
+            .Where(o => o.ActivatedOn.Date <= DateTime.UtcNow.Date && o.IsActive == false).Include(order => order.User)
             .ToList();
 
         foreach (var order in startingOrders)
