@@ -64,7 +64,7 @@ namespace Calcpad.web.Areas.Admin.Controllers
 
             SubscriptionPlan subscriptionPlan = _mapper.Map<SubscriptionPlan>(model);
             await _subscriptionPlanService.AddAsync(subscriptionPlan);
-            return RedirectToAction(string.Empty, "help", new { Area = "", Controller = "Index", subscriptionPlan.Id });
+            return RedirectToAction(string.Empty, "subscription", new { Area = "", Controller = "Subscription", subscriptionPlan.Id });
         }
 
         [HttpPost]
@@ -75,14 +75,14 @@ namespace Calcpad.web.Areas.Admin.Controllers
 
             SubscriptionPlan subscriptionPlan = _mapper.Map<SubscriptionPlan>(model);
             await _subscriptionPlanService.UpdateAsync(subscriptionPlan);
-            return RedirectToAction(string.Empty, "help", new { Area = "", Controller = "Index", subscriptionPlan.Id });
+            return RedirectToAction(string.Empty, "subscription", new { Area = "", Controller = "Subscription", subscriptionPlan.Id });
         }
 
         [HttpPost]
         public async Task<IActionResult> Delete(SubscriptionPlanViewModel model)
         {
             await _subscriptionPlanService.DeleteAsync(model.Id);
-            return RedirectToAction(string.Empty, "help", new { Area = "", Controller = "Index"});
+            return RedirectToAction(string.Empty, "subscription", new { Area = "", Controller = "Subscription"});
         }
     }
 }
