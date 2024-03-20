@@ -35,6 +35,26 @@ public class SubscriptionExpirationService : IHostedService, IDisposable
         var userManager = scope.ServiceProvider.GetRequiredService<UserManager<ApplicationUser>>();
         var orderService = scope.ServiceProvider.GetRequiredService<IOrderService>();
 
+        HandleStartingSubscriptions(context, userManager, orderService);
+        HandleExpiredSubscriptions(context, userManager, orderService);
+    }
+    
+    private void HandleStartingSubscriptions(ApplicationDbContext context, UserManager<ApplicationUser> userManager, IOrderService orderService)
+    {
+        var startingOrders = context.Orders
+            .Where(o => o.ActivatedOn.Date == DateTime.UtcNow.Date && o.IsActive == false).Include(order => order.User)
+            .ToList();
+
+        foreach (var order in startingOrders)
+        {
+            userManager.AddToRoleAsync(order.User, Constants.RoleNames.Subscriber).Wait();
+            order.IsActive = true;
+            orderService.UpdateAsync(order).Wait();
+        }
+    }
+
+    private void HandleExpiredSubscriptions(ApplicationDbContext context, UserManager<ApplicationUser> userManager, IOrderService orderService)
+    {
         var expiredOrders = context.Orders
             .Where(o => o.ExpiresOn.Date == DateTime.UtcNow.Date.AddDays(-1) && o.IsActive == true).Include(order => order.User)
             .ToList();
