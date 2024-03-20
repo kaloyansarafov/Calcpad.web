@@ -83,11 +83,11 @@ namespace Calcpad.web.Areas.Identity.Pages.Account
             returnUrl ??= Url.Content("~/");
             string gRecaptchaResponse = Request.Form["g-recaptcha-response"];
             bool isCaptchaValid = await _reCaptcha.ValidateCaptchaAsync(gRecaptchaResponse);
-            if (!isCaptchaValid)
+            /*if (!isCaptchaValid)
             {
                 ModelState.AddModelError(string.Empty, "Please confirm that you are not a robot.");
             }
-            else if (ModelState.IsValid)
+            else */if (ModelState.IsValid)
             {
                 var user = new ApplicationUser
                 {
