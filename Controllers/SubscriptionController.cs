@@ -1,11 +1,14 @@
 ﻿using System;
 using System.Linq;
+using System.Text.Json;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Calcpad.web.Data;
 using Calcpad.web.Data.Models;
 using Calcpad.web.Data.Services;
+using Calcpad.web.ViewModels;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 
 namespace Calcpad.web.Controllers
@@ -31,6 +34,7 @@ namespace Calcpad.web.Controllers
         }
 
         // GET: Subscription/Order/5
+        [Authorize]
         public async Task<IActionResult> Order(int? id)
         {
             if (id == null)
@@ -56,6 +60,7 @@ namespace Calcpad.web.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
+        [Authorize]
         public async Task<IActionResult> Order(int id, [Bind("ActivatedOn")] Order order)
         {
             order.PlanId = id;
@@ -102,7 +107,14 @@ namespace Calcpad.web.Controllers
                         await _orderService.UpdateAsync(order);
                     }
 
-                    return RedirectToAction(nameof(Index));
+                    // Serialize the Order object to a string
+                    var orderJson = JsonSerializer.Serialize(order);
+
+                    // Store the serialized Order object in TempData
+                    TempData["Order"] = orderJson;
+
+                    // Redirect to the OrderSuccessful action
+                    return RedirectToAction("OrderSuccessful");
                 }
                 catch (DbUpdateConcurrencyException)
                 {
@@ -116,6 +128,24 @@ namespace Calcpad.web.Controllers
                     }
                 }
             }
+            return View(order);
+        }
+        
+        // GET: Subscription/OrderSuccessful/5
+        [Authorize]
+        public async Task<IActionResult> OrderSuccessful()
+        {
+            // Retrieve the serialized Order object from TempData
+            var orderJson = TempData.Peek("Order") as string;
+
+            if (orderJson == null)
+            {
+                return NotFound();
+            }
+
+            // Deserialize the Order object
+            var order = JsonSerializer.Deserialize<OrderViewModel>(orderJson);
+
             return View(order);
         }
 
