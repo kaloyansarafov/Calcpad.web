@@ -19,8 +19,9 @@ namespace Calcpad.web.Data.Models
         [Required, StringLength(100, MinimumLength = 3)]
         public string AccountablePerson { get; set; }
 
-        public int CountryId { get; set; }
         [Required]
+        public int CountryId { get; set; }
+        
         public Country Country { get; set; }
 
         [Required, StringLength(100, MinimumLength = 3)]
