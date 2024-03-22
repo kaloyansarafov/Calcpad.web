@@ -1,0 +1,64 @@
+﻿@page
+@model RegisterCompanyModel
+@using Calcpad.web.Data.Models
+@{
+ViewData["Title"] = "Register Company";
+ViewData["ActivePage"] = ManageNavPages.RegisterCompany;
+}
+
+<h3>@ViewData["Title"]</h3>
+<partial name="_StatusMessage" for="StatusMessage" />
+<div class="row">
+    <div class="col-md-6">
+        <form id="register-company-form" method="post">
+            <div asp-validation-summary="ModelOnly" class="text-danger" role="alert"></div>
+            <div class="form-floating mb-3">
+                <input asp-for="Input.Name" class="form-control" placeholder="Company Name" />
+                <label asp-for="Input.Name"></label>
+                <span asp-validation-for="Input.Name" class="text-danger"></span>
+            </div>
+            <!-- Add similar input fields for each property in your Company model here -->
+            <div class="form-floating mb-3">
+                <input asp-for="Input.Address" class="form-control" placeholder="Company Address" />
+                <label asp-for="Input.Address"></label>
+                <span asp-validation-for="Input.Address" class="text-danger"></span>
+            </div>
+            <div class="form-floating mb-3">
+                <input asp-for="Input.City" class="form-control" placeholder="City" />
+                <label asp-for="Input.City"></label>
+                <span asp-validation-for="Input.City" class="text-danger"></span>
+            </div>
+            <div class="form-floating mb-3">
+                <input asp-for="Input.ZipCode" class="form-control" placeholder="Zip Code" />
+                <label asp-for="Input.ZipCode"></label>
+                <span asp-validation-for="Input.ZipCode" class="text-danger"></span>
+            </div>
+            <div class="form-floating mb-3">
+                <input asp-for="Input.TaxRegistrationNumber" class="form-control" placeholder="Tax Registration Number" />
+                <label asp-for="Input.TaxRegistrationNumber"></label>
+                <span asp-validation-for="Input.TaxRegistrationNumber" class="text-danger"></span>
+            </div>
+            <!-- Field for inputting a bool whether the company is VAT registered -->
+            <div class="form-check mb-3">
+                <input asp-for="Input.VATRegistered" class="form-check-input" />
+                <label class="form-check-label" asp-for="Input.VATRegistered">Is VAT Registered</label>
+            </div>
+            <div class="form-floating mb-3">
+                <input asp-for="Input.VATNumber" class="form-control" placeholder="VAT Number" />
+                <label asp-for="Input.VATNumber"></label>
+                <span asp-validation-for="Input.VATNumber" class="text-danger"></span>
+            </div>
+
+            <div class="form-floating mb-3">
+                <input asp-for="Input.AccountablePerson" class="form-control" placeholder="Full name of the Accountable Person" />
+                <label asp-for="Input.AccountablePerson"></label>
+                <span asp-validation-for="Input.AccountablePerson" class="text-danger"></span>
+            </div>
+            <button id="register-company-button" type="submit" class="w-100 btn btn-lg btn-primary">Register</button>
+        </form>
+    </div>
+</div>
+
+@section Scripts {
+<partial name="_ValidationScriptsPartial" />
+}
