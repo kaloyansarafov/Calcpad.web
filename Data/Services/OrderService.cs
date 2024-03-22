@@ -27,6 +27,9 @@ namespace Calcpad.web.Data.Services
 
             return await _context.Orders
                 .AsNoTracking()
+                .Include(o => o.User)
+                .Include(o => o.Plan)
+                .Include(o => o.Invoice)
                 .SingleOrDefaultAsync(c => c.Id == id);
         }
 

@@ -3,6 +3,15 @@
 
 <!DOCTYPE html>
 
+@{
+    ViewData["Title"] = "Order Successful!";
+}
+
+@section meta{
+<meta name="description" content="Online math and engineering worksheets library">
+<meta name="keywords" content="online,library,math,engineering,worksheets,category">
+}
+
 <html>
 <head>
     <title>Order Successful!</title>
@@ -10,10 +19,7 @@
 <body>
 <div>
     <h1>Order Successful!</h1>
-    <p>Thank you for your order. Here are your order details:</p>
-    <ul>
-        <li>Activated On: @Model.ActivatedOn</li>
-    </ul>
+    <p>Thank you for your order!</p>
 </div>
 </body>
 </html>

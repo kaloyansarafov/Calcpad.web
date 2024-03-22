@@ -39,6 +39,12 @@ namespace Calcpad.web.Mapping
             CreateMap<ViewModels.SubscriptionPlanViewModel, Data.Models.SubscriptionPlan>();
             CreateMap<Data.Models.SubscriptionPlan, Areas.Admin.Models.SubscriptionInputModel>();
             CreateMap<Areas.Admin.Models.SubscriptionInputModel, Data.Models.SubscriptionPlan>();
+            
+            CreateMap<Data.Models.Order, ViewModels.OrderViewModel>();
+            CreateMap<ViewModels.OrderViewModel, Data.Models.Order>();
+
+            CreateMap<Data.Models.Invoice, ViewModels.InvoiceViewModel>();
+            CreateMap<ViewModels.InvoiceViewModel, Data.Models.Invoice>();
         }
     }
 }

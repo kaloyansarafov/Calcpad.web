@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Linq;
-using System.Text.Json;
 using System.Threading.Tasks;
+using AutoMapper;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Calcpad.web.Data;
@@ -18,12 +18,14 @@ namespace Calcpad.web.Controllers
         private readonly ApplicationDbContext _context;
         private readonly UserManager<ApplicationUser> _userManager;
         private readonly IOrderService _orderService;
+        private readonly IMapper _mapper;
 
-        public SubscriptionController(ApplicationDbContext context, UserManager<ApplicationUser> userManager, IOrderService orderService)
+        public SubscriptionController(ApplicationDbContext context, UserManager<ApplicationUser> userManager, IOrderService orderService, IMapper mapper)
         {
             _context = context;
             _userManager = userManager;
             _orderService = orderService;
+            _mapper = mapper;
         }
 
         // GET: Subscription
@@ -107,14 +109,7 @@ namespace Calcpad.web.Controllers
                         await _orderService.UpdateAsync(order);
                     }
 
-                    // Serialize the Order object to a string
-                    var orderJson = JsonSerializer.Serialize(order);
-
-                    // Store the serialized Order object in TempData
-                    TempData["Order"] = orderJson;
-
-                    // Redirect to the OrderSuccessful action
-                    return RedirectToAction("OrderSuccessful");
+                    return RedirectToAction("OrderSuccessful", order);
                 }
                 catch (DbUpdateConcurrencyException)
                 {
@@ -133,20 +128,24 @@ namespace Calcpad.web.Controllers
         
         // GET: Subscription/OrderSuccessful/5
         [Authorize]
-        public async Task<IActionResult> OrderSuccessful()
+        public async Task<IActionResult> OrderSuccessful(int id)
         {
-            // Retrieve the serialized Order object from TempData
-            var orderJson = TempData.Peek("Order") as string;
-
-            if (orderJson == null)
+            var user = await _userManager.GetUserAsync(User);
+            var order = await _orderService.GetByIdAsync(id);
+            
+            if (user != null && user.Id != order.User.Id)
+            {
+                return Unauthorized();
+            }
+            
+            if (order == null)
             {
                 return NotFound();
             }
+            
+            OrderViewModel model = _mapper.Map<OrderViewModel>(order);
 
-            // Deserialize the Order object
-            var order = JsonSerializer.Deserialize<OrderViewModel>(orderJson);
-
-            return View(order);
+            return View(model);
         }
 
         private bool SubscriptionPlanExists(int id)
