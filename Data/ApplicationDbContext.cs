@@ -15,7 +15,7 @@ namespace Calcpad.web.Data
         public DbSet<Company> Companies { get; set; }
         public DbSet<Category> Categories { get; set; }
         public DbSet<Worksheet> Worksheets { get; set; }
-        public DbSet<Country> Countries { get; set; }
+        //public DbSet<Country> Countries { get; set; }
         public DbSet<SubscriptionPlan> SubscriptionPlans { get; set; }
         public DbSet<Order> Orders { get; set; }
         public DbSet<Topic> Topics { get; set; }

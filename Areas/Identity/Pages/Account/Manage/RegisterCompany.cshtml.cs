@@ -1,4 +1,5 @@
-﻿using System.Threading.Tasks;
+﻿using System.Collections.Generic;
+using System.Threading.Tasks;
 using Calcpad.web.Data.Models;
 using Calcpad.web.Data.Services;
 using Microsoft.AspNetCore.Identity;
@@ -28,6 +29,8 @@ namespace Calcpad.web.Areas.Identity.Pages.Account.Manage
             public string City { get; set; }
             public string ZipCode { get; set; }
             public string Address { get; set; }
+            
+            public string Country { get; set; }
         }
         
         [BindProperty]
@@ -35,9 +38,13 @@ namespace Calcpad.web.Areas.Identity.Pages.Account.Manage
 
         [TempData]
         public string StatusMessage { get; set; }
+        
+        public List<string> Countries { get; set; }
 
-        public void OnGet()
+        public async Task<IActionResult> OnGetAsync()
         {
+            Countries = Bia.Countries.Iso3166.Countries.GetAllActiveDirectoryNames();
+            return Page();
         }
 
         public async Task<IActionResult> OnPostAsync()
@@ -62,12 +69,16 @@ namespace Calcpad.web.Areas.Identity.Pages.Account.Manage
                 VATRegistered = Input.VATRegistered,
                 VATNumber = Input.VATNumber,
                 AccountablePerson = Input.AccountablePerson,
+                Country = Bia.Countries.Iso3166.Countries.GetCountryByActiveDirectoryName(Input.Country).Alpha2.ToString(),
                 City = Input.City,
                 ZipCode = Input.ZipCode,
                 Address = Input.Address
             };
             
             await _companyService.AddAsync(company);
+            
+            user.CompanyId = company.Id;
+            await _userManager.UpdateAsync(user);
 
             StatusMessage = "Your company has been registered";
             return RedirectToPage();

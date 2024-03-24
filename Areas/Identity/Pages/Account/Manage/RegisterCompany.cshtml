@@ -19,6 +19,13 @@ ViewData["ActivePage"] = ManageNavPages.RegisterCompany;
             </div>
             <!-- Add similar input fields for each property in your Company model here -->
             <div class="form-floating mb-3">
+                <select asp-for="Input.Country" asp-items="@(new SelectList(Model.Countries))" class="form-control">
+                    <option value="">Select a country</option>
+                </select>
+                <label asp-for="Input.Country"></label>
+                <span asp-validation-for="Input.Country" class="text-danger"></span>
+            </div>
+            <div class="form-floating mb-3">
                 <input asp-for="Input.Address" class="form-control" placeholder="Company Address" />
                 <label asp-for="Input.Address"></label>
                 <span asp-validation-for="Input.Address" class="text-danger"></span>
