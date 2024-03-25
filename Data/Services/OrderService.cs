@@ -1,4 +1,7 @@
-﻿using Calcpad.web.Data.Models;
+﻿using System.Collections;
+using System.Collections.Generic;
+using System.Linq;
+using Calcpad.web.Data.Models;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.ChangeTracking;
 using System.Threading.Tasks;
@@ -50,6 +53,17 @@ namespace Calcpad.web.Data.Services
                 await _context.SaveChangesAsync();
             }
             return order;
+        }
+
+        public async Task<List<Order>> GetByUserIdAsync(string userId)
+        {
+            List<Order> orders = await _context.Orders
+                .AsNoTracking()
+                .Include(o => o.User)
+                .Where(o => o.User.Id == userId)
+                .ToListAsync();
+
+            return orders;
         }
     }
 }

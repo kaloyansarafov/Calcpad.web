@@ -64,6 +64,8 @@ namespace  Calcpad.web.Areas.Identity.Pages.Account.Manage
         public static string RegisterCompany => "RegisterCompany";
 
         public static string Company => "Company";
+
+        public static string OrderHistory => "OrderHistory";
         
         /// <summary>
         ///     This API supports the ASP.NET Core Identity default UI infrastructure and is not intended to be used
@@ -116,6 +118,8 @@ namespace  Calcpad.web.Areas.Identity.Pages.Account.Manage
         public static string RegisterCompanyNavClass(ViewContext viewContext) => PageNavClass(viewContext, RegisterCompany);
 
         public static string CompanyNavClass(ViewContext viewContext) => PageNavClass(viewContext, Company);
+
+        public static string OrderHistoryNavClass(ViewContext viewContext) => PageNavClass(viewContext, OrderHistory);
         
         /// <summary>
         ///     This API supports the ASP.NET Core Identity default UI infrastructure and is not intended to be used

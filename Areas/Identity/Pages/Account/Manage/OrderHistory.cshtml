@@ -1,0 +1,41 @@
+﻿@page
+@model Calcpad.web.Areas.Identity.Pages.Account.Manage.OrderHistory
+
+@{
+ViewData["Title"] = "Order History";
+ViewData["ActivePage"] = ManageNavPages.OrderHistory;
+}
+
+<h3>@ViewData["Title"]</h3>
+<partial name="_StatusMessage" for="StatusMessage" />
+
+@if (Model.Orders.Any())
+{
+<table class="table">
+    <thead>
+    <tr>
+        <th>Order ID</th>
+        <th>Created On</th>
+        <th>Activated On</th>
+        <th>Expires On</th>
+        <th>Is Active</th>
+    </tr>
+    </thead>
+    <tbody>
+    @foreach (var order in Model.Orders)
+    {
+    <tr>
+        <td>@order.Id</td>
+        <td>@order.CreatedOn</td>
+        <td>@order.ActivatedOn</td>
+        <td>@order.ExpiresOn</td>
+        <td>@order.IsActive</td>
+    </tr>
+    }
+    </tbody>
+</table>
+}
+else
+{
+<p>You have no orders!</p>
+}
