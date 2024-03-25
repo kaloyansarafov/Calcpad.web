@@ -19,7 +19,7 @@ public class CompanyService : ICompanyService
         return company;
     }
     
-    public async Task<Company> GetByIdAsync(int id)
+    public async Task<Company> GetByIdAsync(int? id)
     {
         return await _context.Companies.FindAsync(id);
     }

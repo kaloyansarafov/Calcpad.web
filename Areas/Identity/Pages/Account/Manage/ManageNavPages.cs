@@ -62,6 +62,8 @@ namespace  Calcpad.web.Areas.Identity.Pages.Account.Manage
         public static string TwoFactorAuthentication => "TwoFactorAuthentication";
 
         public static string RegisterCompany => "RegisterCompany";
+
+        public static string Company => "Company";
         
         /// <summary>
         ///     This API supports the ASP.NET Core Identity default UI infrastructure and is not intended to be used
@@ -112,6 +114,8 @@ namespace  Calcpad.web.Areas.Identity.Pages.Account.Manage
         public static string TwoFactorAuthenticationNavClass(ViewContext viewContext) => PageNavClass(viewContext, TwoFactorAuthentication);
 
         public static string RegisterCompanyNavClass(ViewContext viewContext) => PageNavClass(viewContext, RegisterCompany);
+
+        public static string CompanyNavClass(ViewContext viewContext) => PageNavClass(viewContext, Company);
         
         /// <summary>
         ///     This API supports the ASP.NET Core Identity default UI infrastructure and is not intended to be used

@@ -1,16 +1,26 @@
 @using Calcpad.web.Data.Models
+@using Calcpad.web.Global
 @inject SignInManager<ApplicationUser> SignInManager
 @{
     var hasExternalLogins = (await SignInManager.GetExternalAuthenticationSchemesAsync()).Any();
     var hasCompany =  SignInManager.UserManager.GetUserAsync(User).Result?.CompanyId != null;
+    var isAdmin = User.Identity.IsAuthenticated && User.IsInRole(Constants.RoleNames.Administrator);
 }
 <ul class="nav nav-pills flex-column">
+    @if (isAdmin)
+    {
+        // link to the management panel
+    }
     <li class="nav-item"><a class="nav-link @ManageNavPages.IndexNavClass(ViewContext)" id="profile" asp-page="./Index">Profile</a></li>
     <li class="nav-item"><a class="nav-link @ManageNavPages.EmailNavClass(ViewContext)" id="email" asp-page="./Email">Email</a></li>
     <li class="nav-item"><a class="nav-link @ManageNavPages.ChangePasswordNavClass(ViewContext)" id="change-password" asp-page="./ChangePassword">Password</a></li>
     @if (!hasCompany)
     {
         <li class="nav-item"><a class="nav-link @ManageNavPages.RegisterCompanyNavClass(ViewContext)" id="register-company" asp-page="./RegisterCompany">Register Company</a></li>
+    }
+    else
+    {
+        <li class="nav-item"><a class="nav-link @ManageNavPages.CompanyNavClass(ViewContext)" id="company" asp-page="./Company">Company</a></li>
     }
     @if (hasExternalLogins)
     {

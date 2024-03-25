@@ -1,0 +1,56 @@
+﻿@page
+@model Calcpad.web.Areas.Identity.Pages.Account.Manage.Company
+
+@{
+ViewData["Title"] = "Company";
+ViewData["ActivePage"] = ManageNavPages.Company;
+}
+
+<h3>@ViewData["Title"]</h3>
+<partial name="_StatusMessage" for="StatusMessage" />
+<div class="row">
+    <div class="col-md-6">
+        <form id="company-form" method="post">
+            <div asp-validation-summary="ModelOnly" class="text-danger" role="alert"></div>
+            <div class="form-floating mb-3">
+                <input asp-for="Input.Name" class="form-control" placeholder="Please enter your company name." />
+                <label asp-for="Input.Name" class="form-label"></label>
+            </div>
+            <div class="form-floating mb-3">
+                <input asp-for="Input.TaxRegistrationNumber" class="form-control" placeholder="Please enter your tax registration number." />
+                <label asp-for="Input.TaxRegistrationNumber" class="form-label"></label>
+            </div>
+            <div class="form-floating mb-3">
+                <input asp-for="Input.VATRegistered" type="checkbox" class="form-check-input" />
+                <label asp-for="Input.VATRegistered" class="form-check-label">VAT Registered</label>
+            </div>
+            <div class="form-floating mb-3">
+                <input asp-for="Input.VATNumber" class="form-control" placeholder="Please enter your VAT number." />
+                <label asp-for="Input.VATNumber" class="form-label"></label>
+            </div>
+            <div class="form-floating mb-3">
+                <input asp-for="Input.AccountablePerson" class="form-control" placeholder="Please enter the accountable person's name." />
+                <label asp-for="Input.AccountablePerson" class="form-label"></label>
+            </div>
+            <div class="form-floating mb-3">
+                <input asp-for="Input.City" class="form-control" placeholder="Please enter your city." />
+                <label asp-for="Input.City" class="form-label"></label>
+            </div>
+            <div class="form-floating mb-3">
+                <input asp-for="Input.ZipCode" class="form-control" placeholder="Please enter your zip code." />
+                <label asp-for="Input.ZipCode" class="form-label"></label>
+            </div>
+            <div class="form-floating mb-3">
+                <input asp-for="Input.Address" class="form-control" placeholder="Please enter your company's address" />
+                <label asp-for="Input.Address" class="form-label"></label>
+            </div>
+            <div class="form-floating mb-3">
+                <select asp-for="Input.Country" asp-items="@(new SelectList(Model.Countries))" class="form-control">
+                    <option value="">Select a country</option>
+                </select>
+                <label asp-for="Input.Country" class="form-label"></label>
+            </div>
+            <button id="update-company-button" type="submit" class="w-100 btn btn-lg btn-primary">Save</button>
+        </form>
+    </div>
+</div>
