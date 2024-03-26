@@ -2,6 +2,7 @@
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
@@ -27,7 +28,7 @@ public class SubscriptionExpirationService : IHostedService, IDisposable
         return Task.CompletedTask;
     }
 
-    private void DoWork(object state)
+    private async void DoWork(object state)
     {
         Console.WriteLine($"SubscriptionExpirationService is working. Time: {DateTime.UtcNow}");
         using var scope = _serviceProvider.CreateScope();
@@ -35,36 +36,70 @@ public class SubscriptionExpirationService : IHostedService, IDisposable
         var userManager = scope.ServiceProvider.GetRequiredService<UserManager<ApplicationUser>>();
         var orderService = scope.ServiceProvider.GetRequiredService<IOrderService>();
 
-        HandleStartingSubscriptions(context, userManager, orderService);
+        await HandleStartingSubscriptions(context, userManager, orderService);
         HandleExpiredSubscriptions(context, userManager, orderService);
     }
     
-    private void HandleStartingSubscriptions(ApplicationDbContext context, UserManager<ApplicationUser> userManager, IOrderService orderService)
+    private async Task HandleStartingSubscriptions(ApplicationDbContext context, UserManager<ApplicationUser> userManager, IOrderService orderService)
     {
-        var startingOrders = context.Orders
-            .Where(o => o.ActivatedOn.Date <= DateTime.UtcNow.Date && o.IsActive == false).Include(order => order.User)
-            .ToList();
+        var startingOrders = await orderService.GetOrdersToStartAsync();
 
         foreach (var order in startingOrders)
         {
-            userManager.AddToRoleAsync(order.User, Constants.RoleNames.Subscriber).Wait();
+            await userManager.AddToRoleAsync(order.User, Constants.RoleNames.Subscriber);
             order.IsActive = true;
-            orderService.UpdateAsync(order).Wait();
+            await orderService.UpdateAsync(order);
         }
     }
 
-    private void HandleExpiredSubscriptions(ApplicationDbContext context, UserManager<ApplicationUser> userManager, IOrderService orderService)
+    private async void HandleExpiredSubscriptions(ApplicationDbContext context, UserManager<ApplicationUser> userManager, IOrderService orderService)
     {
-        var expiredOrders = context.Orders
-            .Where(o => o.ExpiresOn.Date == DateTime.UtcNow.Date.AddDays(-1) && o.IsActive == true).Include(order => order.User)
-            .ToList();
+        var expiredOrders = await orderService.GetOrdersToExpireAsync();
 
         foreach (var order in expiredOrders)
         {
-            userManager.RemoveFromRoleAsync(order.User, Constants.RoleNames.Subscriber).Wait();
+            await userManager.RemoveFromRoleAsync(order.User, Constants.RoleNames.Subscriber);
             order.IsActive = false;
-            orderService.UpdateAsync(order).Wait();
+            await orderService.UpdateAsync(order);
+
+            if (InvoiceStillActive(order))
+            {
+                //renew subscription with a new order and invoice
+                var newOrder = new Order
+                {
+                    PlanId = order.PlanId,
+                    User = order.User,
+                    CreatedOn = DateTime.Now,
+                    ActivatedOn = DateTime.Today,
+                    ExpiresOn = DateTime.Today.AddMonths(1),
+                    IsActive = true
+                };
+                
+                var invoice = new Invoice
+                {
+                    InvoiceNumber = (await context.Invoices.LastOrDefaultAsync()).InvoiceNumber + 1,
+                    NetAmmount = order.Plan.Price,
+                    TaxAmmount = order.Plan.Price * 0.21m,
+                    CreatedDate = DateTime.Now,
+                    PaymentDate = newOrder.ActivatedOn,
+                    IsCanceled = false
+                };
+                
+                newOrder.Invoice = invoice;
+                
+                await orderService.AddAsync(newOrder);
+                
+                await userManager.AddToRoleAsync(order.User, Constants.RoleNames.Subscriber);
+            }
         }
+    }
+    
+    private bool InvoiceStillActive(Order order)
+    {
+        if (order.Invoice.IsCanceled)
+            return false;
+
+        return true;
     }
 
     public Task StopAsync(CancellationToken cancellationToken)

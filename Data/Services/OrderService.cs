@@ -1,4 +1,5 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using Calcpad.web.Data.Models;
@@ -61,6 +62,29 @@ namespace Calcpad.web.Data.Services
                 .AsNoTracking()
                 .Include(o => o.User)
                 .Where(o => o.User.Id == userId)
+                .ToListAsync();
+
+            return orders;
+        }
+        
+        public async Task<List<Order>> GetOrdersToExpireAsync()
+        {
+            List<Order> orders = await _context.Orders
+                .AsNoTracking()
+                .Include(o => o.User)
+                .Include(o => o.Invoice)
+                .Where(o => o.ExpiresOn.Date == DateTime.UtcNow.Date && o.IsActive == true)
+                .ToListAsync();
+
+            return orders;
+        }
+        
+        public async Task<List<Order>> GetOrdersToStartAsync()
+        {
+            List<Order> orders = await _context.Orders
+                .AsNoTracking()
+                .Include(o => o.User)
+                .Where(o => o.ActivatedOn.Date <= DateTime.UtcNow.Date && o.IsActive == false)
                 .ToListAsync();
 
             return orders;

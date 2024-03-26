@@ -11,4 +11,6 @@ public interface IOrderService
     Task<Order> UpdateAsync(Order order);
     Task<Order> DeleteAsync(int id);
     Task<List<Order>> GetByUserIdAsync(string userId);
+    Task<List<Order>> GetOrdersToExpireAsync();
+    Task<List<Order>> GetOrdersToStartAsync();
 }

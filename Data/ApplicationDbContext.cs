@@ -19,5 +19,6 @@ namespace Calcpad.web.Data
         public DbSet<Order> Orders { get; set; }
         public DbSet<Topic> Topics { get; set; }
         public DbSet<Article> Articles { get; set; }
+        public DbSet<Invoice> Invoices { get; set; }
     }
 }
