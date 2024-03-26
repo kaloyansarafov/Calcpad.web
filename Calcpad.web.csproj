@@ -65,6 +65,9 @@
 
   <ItemGroup>
     <Folder Include="Areas\Admin\Views\Order\" />
+    <Folder Include="Areas\Subscriber\Controllers\" />
+    <Folder Include="Areas\Subscriber\Models\" />
+    <Folder Include="Areas\Subscriber\Views\" />
     <Folder Include="Migrations\" />
   </ItemGroup>
 </Project>
