@@ -10,6 +10,7 @@ using Calcpad.web.Data.Services;
 using Calcpad.web.ViewModels;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
+using Calcpad.web.Global;
 
 namespace Calcpad.web.Controllers
 {
@@ -65,6 +66,16 @@ namespace Calcpad.web.Controllers
         [Authorize]
         public async Task<IActionResult> Order(int id, [Bind("ActivatedOn")] Order order)
         {
+            // Check if the user is already a subscriber
+            var activeOrder = await _context.Orders
+                .Where(o => o.User.Id == order.User.Id && o.IsActive == true)
+                .FirstOrDefaultAsync();
+            if (activeOrder != null)
+            {
+                ModelState.AddModelError("ActivatedOn", "You already have an active subscription.");
+                return View(order);
+            }
+            
             order.PlanId = id;
             order.Plan = await _context.SubscriptionPlans.FirstOrDefaultAsync(m => m.Id == id);
             order.User = await _userManager.GetUserAsync(User);
@@ -83,16 +94,6 @@ namespace Calcpad.web.Controllers
             };
 
             order.Invoice = invoice;
-            
-            // Check if the user is already a subscriber
-            var activeOrder = await _context.Orders
-                .Where(o => o.User.Id == order.User.Id && o.IsActive == true)
-                .FirstOrDefaultAsync();
-            if (activeOrder != null)
-            {
-                ModelState.AddModelError("ActivatedOn", "You already have an active subscription.");
-                return View(order);
-            }
 
             if (ModelState.IsValid)
             {
@@ -103,7 +104,7 @@ namespace Calcpad.web.Controllers
                     if (order.ActivatedOn.Date >= DateTime.Now.Date)
                     {
                         var user = await _userManager.GetUserAsync(User);
-                        await _userManager.AddToRoleAsync(user, "Subscriber");
+                        await _userManager.AddToRoleAsync(user, Constants.RoleNames.Subscriber);
                         
                         order.IsActive = true;
                         await _orderService.UpdateAsync(order);
