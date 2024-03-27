@@ -1,10 +1,13 @@
 @using Calcpad.web.Data.Models
+@using Calcpad.web.Data.Services
 @using Calcpad.web.Global
 @inject SignInManager<ApplicationUser> SignInManager
+@inject IOrderService OrderService
 @{
     var hasExternalLogins = (await SignInManager.GetExternalAuthenticationSchemesAsync()).Any();
     var hasCompany =  SignInManager.UserManager.GetUserAsync(User).Result?.CompanyId != null;
     var isAdmin = User.Identity.IsAuthenticated && User.IsInRole(Constants.RoleNames.Administrator);
+    var hasActiveSubscription = OrderService.GetLastByUserIdAsync(SignInManager.UserManager.GetUserId(User)).Result?.IsActive ?? false;
 }
 <ul class="nav nav-pills flex-column">
     @if (isAdmin)
@@ -21,6 +24,10 @@
     else
     {
         <li class="nav-item"><a class="nav-link @ManageNavPages.CompanyNavClass(ViewContext)" id="company" asp-page="./Company">Company</a></li>
+    }
+    @if (hasActiveSubscription)
+    {
+        <li class="nav-item"><a class="nav-link @ManageNavPages.ManageSubscriptionNavClass(ViewContext)" id="manage-subscription" asp-page="./ManageSubscription">Manage Subscription</a></li>
     }
     <li class="nav-item"><a class="nav-link @ManageNavPages.OrderHistoryNavClass(ViewContext)" id="order-history" asp-page="./OrderHistory">Order History</a></li>
     @if (hasExternalLogins)

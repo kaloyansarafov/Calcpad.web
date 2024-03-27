@@ -67,6 +67,18 @@ namespace Calcpad.web.Data.Services
             return orders;
         }
         
+        public async Task<Order> GetLastByUserIdAsync(string userId)
+        {
+            Order order = await _context.Orders
+                .AsNoTracking()
+                .Include(o => o.User)
+                .Where(o => o.User.Id == userId)
+                .OrderByDescending(o => o.CreatedOn)
+                .FirstOrDefaultAsync();
+
+            return order;
+        }
+        
         public async Task<List<Order>> GetOrdersToExpireAsync()
         {
             List<Order> orders = await _context.Orders
