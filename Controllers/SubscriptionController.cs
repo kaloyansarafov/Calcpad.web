@@ -66,9 +66,11 @@ namespace Calcpad.web.Controllers
         [Authorize]
         public async Task<IActionResult> Order(int id, [Bind("ActivatedOn")] Order order)
         {
+            var user = await _userManager.GetUserAsync(User);
+            
             // Check if the user is already a subscriber
             var activeOrder = await _context.Orders
-                .Where(o => o.User.Id == order.User.Id && o.IsActive == true)
+                .Where(o => o.User.Id == user.Id && o.IsActive == true)
                 .FirstOrDefaultAsync();
             if (activeOrder != null)
             {
@@ -78,7 +80,7 @@ namespace Calcpad.web.Controllers
             
             order.PlanId = id;
             order.Plan = await _context.SubscriptionPlans.FirstOrDefaultAsync(m => m.Id == id);
-            order.User = await _userManager.GetUserAsync(User);
+            order.User = user;
             order.CreatedOn = DateTime.Now;
             order.ExpiresOn = order.ActivatedOn.AddMonths(1);
             order.IsActive = false;
@@ -103,7 +105,6 @@ namespace Calcpad.web.Controllers
 
                     if (order.ActivatedOn.Date >= DateTime.Now.Date)
                     {
-                        var user = await _userManager.GetUserAsync(User);
                         await _userManager.AddToRoleAsync(user, Constants.RoleNames.Subscriber);
                         
                         order.IsActive = true;

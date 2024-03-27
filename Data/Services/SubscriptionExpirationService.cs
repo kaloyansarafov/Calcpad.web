@@ -24,7 +24,7 @@ public class SubscriptionExpirationService : IHostedService, IDisposable
 
     public Task StartAsync(CancellationToken cancellationToken)
     {
-        _timer = new Timer(DoWork, null, TimeSpan.Zero, TimeSpan.FromHours(24));
+        _timer = new Timer(DoWork, null, TimeSpan.FromSeconds(5), TimeSpan.FromHours(24));
         return Task.CompletedTask;
     }
 
@@ -37,7 +37,7 @@ public class SubscriptionExpirationService : IHostedService, IDisposable
         var orderService = scope.ServiceProvider.GetRequiredService<IOrderService>();
 
         await HandleStartingSubscriptions(context, userManager, orderService);
-        HandleExpiredSubscriptions(context, userManager, orderService);
+        await HandleExpiredSubscriptions(context, userManager, orderService);
     }
     
     private async Task HandleStartingSubscriptions(ApplicationDbContext context, UserManager<ApplicationUser> userManager, IOrderService orderService)
@@ -52,7 +52,7 @@ public class SubscriptionExpirationService : IHostedService, IDisposable
         }
     }
 
-    private async void HandleExpiredSubscriptions(ApplicationDbContext context, UserManager<ApplicationUser> userManager, IOrderService orderService)
+    private async Task HandleExpiredSubscriptions(ApplicationDbContext context, UserManager<ApplicationUser> userManager, IOrderService orderService)
     {
         var expiredOrders = await orderService.GetOrdersToExpireAsync();
 
