@@ -1,10 +1,11 @@
 ﻿@page
 @model Calcpad.web.ViewModels.OrderViewModel
 
-<!DOCTYPE html>
-
 @{
-    ViewData["Title"] = "Order Successful!";
+    if (ViewData != null)
+    {
+        ViewData["Title"] = "Order Successful!";
+    }
 }
 
 @section meta{
@@ -12,9 +13,8 @@
 <meta name="keywords" content="online,library,math,engineering,worksheets,category">
 }
 
-<html>
 <head>
-    <title>Order Successful!</title>
+    <title>@ViewData?["Title"]</title>
 </head>
 <body>
 <div>
@@ -22,4 +22,3 @@
     <p>Thank you for your order!</p>
 </div>
 </body>
-</html>
