@@ -70,6 +70,7 @@ namespace Calcpad.web
             services.AddScoped<ISubscriptionPlanService, SubscriptionPlanService>();
             services.AddScoped<IOrderService, OrderService>();
             services.AddScoped<ICompanyService, CompanyService>();
+            services.AddScoped<IInvoiceService, InvoiceService>();
             services.AddSingleton<IReCaptchaService, ReCapthaService>();
             
             services.AddHostedService<SubscriptionExpirationService>();

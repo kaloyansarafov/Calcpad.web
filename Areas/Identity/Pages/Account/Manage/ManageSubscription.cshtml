@@ -11,6 +11,16 @@
 
 @if (Model.LatestOrder != null)
 {
+    <h4>Subscription Status</h4>
+    @if (Model.LatestOrder.Invoice.IsCanceled)
+    {
+        <p style="color: red;">INACTIVE</p>
+    }
+    else
+    {
+        <p style="color: green;">ACTIVE</p>
+    }
+
     <h4>Your Latest Order</h4>
     <p>Order ID: @Model.LatestOrder.Id</p>
     <p>Activated On: @Model.LatestOrder.ActivatedOn.ToShortDateString()</p>
@@ -22,10 +32,12 @@
     <p>Plan Duration: @Model.LatestOrder.Plan.Months months</p>
     <p>Plan Price: @Model.LatestOrder.Plan.Price</p>
     
-    //cancel subscription button
-    <form method="post">
-        <button type="submit" class="btn btn-danger">Cancel Subscription</button>
-    </form>
+    @if (!Model.LatestOrder.Invoice.IsCanceled)
+    {
+        <form method="post">
+            <button type="submit" class="btn btn-danger">Cancel Subscription</button>
+        </form>
+    }
 }
 else
 {

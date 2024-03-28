@@ -11,11 +11,13 @@ namespace Calcpad.web.Areas.Identity.Pages.Account.Manage
     {
         private readonly UserManager<ApplicationUser> _userManager;
         private readonly IOrderService _orderService;
+        private readonly IInvoiceService _invoiceService;
 
-        public ManageSubscriptionModel(UserManager<ApplicationUser> userManager, IOrderService orderService)
+        public ManageSubscriptionModel(UserManager<ApplicationUser> userManager, IOrderService orderService, IInvoiceService invoiceService)
         {
             _userManager = userManager;
             _orderService = orderService;
+            _invoiceService = invoiceService;
         }
 
         [TempData]
@@ -41,7 +43,7 @@ namespace Calcpad.web.Areas.Identity.Pages.Account.Manage
             return Page();
         }
         
-        public async Task<IActionResult> OnPostCancelAsync()
+        public async Task<IActionResult> OnPostAsync()
         {
             var user = await _userManager.GetUserAsync(User);
             if (user == null)
@@ -56,9 +58,10 @@ namespace Calcpad.web.Areas.Identity.Pages.Account.Manage
                 StatusMessage = "You have no orders yet.";
                 return Page();
             }
-
-            LatestOrder.Invoice.IsCanceled = true;
-            await _orderService.UpdateAsync(LatestOrder);
+            
+            var invoice = await _invoiceService.GetByIdAsync(LatestOrder.Invoice.Id);
+            invoice.IsCanceled = true;
+            await _invoiceService.UpdateAsync(invoice);
 
             StatusMessage = "Your subscription has been cancelled.";
 
