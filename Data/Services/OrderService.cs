@@ -72,6 +72,8 @@ namespace Calcpad.web.Data.Services
             Order order = await _context.Orders
                 .AsNoTracking()
                 .Include(o => o.User)
+                .Include(o => o.Plan)
+                .Include(o => o.Invoice)
                 .Where(o => o.User.Id == userId)
                 .OrderByDescending(o => o.CreatedOn)
                 .FirstOrDefaultAsync();

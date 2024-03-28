@@ -1,19 +1,33 @@
 ﻿@page
-@model Calcpad.web.Areas.Identity.Pages.Account.Manage.ManageSubscription
+@model Calcpad.web.Areas.Identity.Pages.Account.Manage.ManageSubscriptionModel
 
 @{
-    Layout = null;
+    ViewData["Title"] = "Manage Subscription";
+    ViewData["ActivePage"] = ManageNavPages.ManageSubscription;
 }
 
-<!DOCTYPE html>
+<h3>@ViewData["Title"]</h3>
+<partial name="_StatusMessage" for="StatusMessage" />
 
-<html>
-<head>
-    <title></title>
-</head>
-<body>
-<div>
+@if (Model.LatestOrder != null)
+{
+    <h4>Your Latest Order</h4>
+    <p>Order ID: @Model.LatestOrder.Id</p>
+    <p>Activated On: @Model.LatestOrder.ActivatedOn.ToShortDateString()</p>
+    <p>Expires On: @Model.LatestOrder.ExpiresOn.ToShortDateString()</p>
+
+    <h4>Your Subscription Plan</h4>
+    <p>Plan Name: @Model.LatestOrder.Plan.Name</p>
+    <p>Plan Description: @Model.LatestOrder.Plan.Description</p>
+    <p>Plan Duration: @Model.LatestOrder.Plan.Months months</p>
+    <p>Plan Price: @Model.LatestOrder.Plan.Price</p>
     
-</div>
-</body>
-</html>
+    //cancel subscription button
+    <form method="post">
+        <button type="submit" class="btn btn-danger">Cancel Subscription</button>
+    </form>
+}
+else
+{
+    <p>You have no orders yet.</p>
+}
