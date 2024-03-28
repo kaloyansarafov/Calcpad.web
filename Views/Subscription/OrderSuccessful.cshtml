@@ -2,7 +2,7 @@
 @model Calcpad.web.ViewModels.OrderViewModel
 
 @{
-    if (ViewData != null)
+    if (ViewData is not null)
     {
         ViewData["Title"] = "Order Successful!";
     }
