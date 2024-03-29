@@ -1,17 +1,19 @@
-﻿using Microsoft.AspNetCore.Identity;
-using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Extensions.Hosting;
-using System;
-using System.Collections.Generic;
+﻿using System;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
-using Calcpad.web.Data;
 using Calcpad.web.Data.Models;
-using Calcpad.web.Data.Services;
 using Calcpad.web.Global;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Hosting;
 
+namespace Calcpad.web.Data.Services;
+
+/// <summary>
+/// Service for handling subscription expiration.
+/// </summary>
 public class SubscriptionExpirationService : IHostedService, IDisposable
 {
     private readonly IServiceProvider _serviceProvider;
@@ -40,6 +42,9 @@ public class SubscriptionExpirationService : IHostedService, IDisposable
         await HandleExpiredSubscriptions(context, userManager, orderService);
     }
     
+    /// <summary>
+    /// Service for handling subscription expiration.
+    /// </summary>
     private async Task HandleStartingSubscriptions(ApplicationDbContext context, UserManager<ApplicationUser> userManager, IOrderService orderService)
     {
         var startingOrders = await orderService.GetOrdersToStartAsync();
@@ -52,6 +57,9 @@ public class SubscriptionExpirationService : IHostedService, IDisposable
         }
     }
 
+    /// <summary>
+    /// Handles expired subscriptions.
+    /// </summary>
     private async Task HandleExpiredSubscriptions(ApplicationDbContext context, UserManager<ApplicationUser> userManager, IOrderService orderService)
     {
         var expiredOrders = await orderService.GetOrdersToExpireAsync();
