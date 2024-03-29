@@ -77,7 +77,7 @@ public class SubscriptionExpirationService : IHostedService, IDisposable
                 
                 var invoice = new Invoice
                 {
-                    InvoiceNumber = (await context.Invoices.LastOrDefaultAsync()).InvoiceNumber + 1,
+                    InvoiceNumber = (await context.Invoices.OrderByDescending(i => i.InvoiceNumber).FirstOrDefaultAsync())?.InvoiceNumber + 1 ?? 1,
                     NetAmmount = order.Plan.Price,
                     TaxAmmount = order.Plan.Price * 0.21m,
                     CreatedDate = DateTime.Now,
