@@ -1,4 +1,5 @@
-﻿using System.Threading.Tasks;
+﻿using System.Collections.Generic;
+using System.Threading.Tasks;
 using Calcpad.web.Data.Models;
 
 namespace Calcpad.web.Data.Services
@@ -35,5 +36,11 @@ namespace Calcpad.web.Data.Services
         /// <param name="id">The ID of the invoice to delete.</param>
         /// <returns>The deleted invoice.</returns>
         public Task<Invoice> DeleteAsync(int id);
+        
+        /// <summary>
+        /// Gets all invoices.
+        /// </summary>
+        /// <returns>All invoices.</returns>
+        public Task<IEnumerable<Invoice>> GetAllAsync();
     }
 }

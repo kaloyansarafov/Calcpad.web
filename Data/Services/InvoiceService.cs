@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Threading.Tasks;
 using Calcpad.web.Data.Models;
 using Microsoft.EntityFrameworkCore;
@@ -49,5 +50,10 @@ public class InvoiceService : IInvoiceService
         invoiceEntry.State = EntityState.Modified;
         await _context.SaveChangesAsync();
         return invoice;
+    }
+    
+    public async Task<IEnumerable<Invoice>> GetAllAsync()
+    {
+        return await _context.Invoices.ToListAsync();
     }
 }

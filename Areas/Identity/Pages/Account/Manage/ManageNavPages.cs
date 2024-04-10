@@ -69,6 +69,8 @@ namespace  Calcpad.web.Areas.Identity.Pages.Account.Manage
         
         public static string ManageSubscription => "ManageSubscription";
         
+        public static string AdminPage => "AdminPage";
+        
         /// <summary>
         ///     This API supports the ASP.NET Core Identity default UI infrastructure and is not intended to be used
         ///     directly from your code. This API may change or be removed in future releases.
@@ -124,6 +126,8 @@ namespace  Calcpad.web.Areas.Identity.Pages.Account.Manage
         public static string OrderHistoryNavClass(ViewContext viewContext) => PageNavClass(viewContext, OrderHistory);
         
         public static string ManageSubscriptionNavClass(ViewContext viewContext) => PageNavClass(viewContext, ManageSubscription);
+        
+        public static string AdminPageNavClass(ViewContext viewContext) => PageNavClass(viewContext, AdminPage);
         
         /// <summary>
         ///     This API supports the ASP.NET Core Identity default UI infrastructure and is not intended to be used

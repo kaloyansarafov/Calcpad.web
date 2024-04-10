@@ -1,0 +1,51 @@
+﻿@model IEnumerable<Calcpad.web.ViewModels.InvoiceViewModel>
+
+<table class="table">
+    <thead>
+    <tr>
+        <th>
+            @Html.ActionLink("Invoice ID", "Index", new { sortOrder = ViewBag.IdSortParm })
+        </th>
+        <th>
+            @Html.ActionLink("Date", "Index", new { sortOrder = ViewBag.DateSortParm })
+        </th>
+        <th>
+            @Html.ActionLink("Amount", "Index", new { sortOrder = ViewBag.AmountSortParm })
+        </th>
+        <!-- Add more columns as needed -->
+    </tr>
+    </thead>
+    <tbody>
+    @foreach (InvoiceViewModel item in ViewBag.OnePageOfInvoices)
+    {
+    <tr>
+        <td>@Html.DisplayFor(modelItem => item.Id)</td>
+        <td>@Html.DisplayFor(modelItem => item.CreatedDate)</td>
+        <td>@Html.DisplayFor(modelItem => item.NetAmmount)</td>
+        <!-- Add more cells as needed -->
+    </tr>
+    }
+    </tbody>
+</table>
+
+<div>
+    @if (ViewBag.PageNumber > 1)
+    {
+    @Html.ActionLink("Previous", "Index", new { page = ViewBag.PageNumber - 1, sortOrder = ViewBag.CurrentSort })
+    }
+    @for (var i = 1; i <= ViewBag.PageCount; i++)
+    {
+    if (i == ViewBag.PageNumber)
+    {
+    @Html.Raw(i)
+    }
+    else
+    {
+    @Html.ActionLink(i.ToString(), "Index", new { page = i, sortOrder = ViewBag.CurrentSort })
+    }
+    }
+    @if (ViewBag.PageNumber < ViewBag.PageCount)
+    {
+    @Html.ActionLink("Next", "Index", new { page = ViewBag.PageNumber + 1, sortOrder = ViewBag.CurrentSort })
+    }
+</div>
