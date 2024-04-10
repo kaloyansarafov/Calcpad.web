@@ -10,7 +10,7 @@
     string slug = TextHelper.SeoFriendly(Model.Category.Name);
 
     bool isDev = isGet && User.Identity.IsAuthenticated && User.IsInRole(Constants.RoleNames.Developer);
-    bool isLocked = !(User.Identity.IsAuthenticated || Model.IsFree);
+    bool isLocked = !(User.Identity.IsAuthenticated && User.IsInRole(Constants.RoleNames.Subscriber) || Model.IsFree);
 }
 @section meta{
     <meta name="description" content="Online math and engineering calculations worksheets.">
