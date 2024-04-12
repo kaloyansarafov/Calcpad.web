@@ -39,8 +39,11 @@ namespace Calcpad.web.Data.Services
 
         public async Task<Order> UpdateAsync(Order order)
         {
-            EntityEntry orderEntry = _context.Orders.Attach(order);
-            orderEntry.State = EntityState.Modified;
+            if (_context.Entry(order).State == EntityState.Detached)
+            {
+                _context.Orders.Attach(order);
+            }
+            _context.Entry(order).State = EntityState.Modified;
             await _context.SaveChangesAsync();
             return order;
         }
@@ -87,6 +90,7 @@ namespace Calcpad.web.Data.Services
                 .AsNoTracking()
                 .Include(o => o.User)
                 .Include(o => o.Invoice)
+                .Include(o => o.Plan)
                 .Where(o => o.ExpiresOn.Date == DateTime.UtcNow.Date && o.IsActive == true)
                 .ToListAsync();
 

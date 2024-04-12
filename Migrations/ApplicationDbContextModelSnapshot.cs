@@ -210,13 +210,13 @@ namespace Calcpad.web.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
+                    b.Property<int>("Days")
+                        .HasColumnType("int");
+
                     b.Property<string>("Description")
                         .IsRequired()
                         .HasMaxLength(255)
                         .HasColumnType("nvarchar(255)");
-
-                    b.Property<byte>("Months")
-                        .HasColumnType("tinyint");
 
                     b.Property<string>("Name")
                         .IsRequired()

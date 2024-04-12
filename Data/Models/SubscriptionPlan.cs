@@ -15,7 +15,7 @@ namespace Calcpad.web.Data.Models
         public string Description { get; set; }
 
         [Required]
-        public byte Months { get; set; }
+        public ushort Days { get; set; }
 
         [Required, Column(TypeName = "smallmoney")]
         public Decimal Price { get; set; }

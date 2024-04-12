@@ -51,7 +51,9 @@ public class SubscriptionExpirationService : IHostedService, IDisposable
 
         foreach (var order in startingOrders)
         {
-            await userManager.AddToRoleAsync(order.User, Constants.RoleNames.Subscriber);
+            var user = await userManager.FindByIdAsync(order.User.Id);
+            await userManager.AddToRoleAsync(user, Constants.RoleNames.Subscriber);
+            
             order.IsActive = true;
             await orderService.UpdateAsync(order);
         }
@@ -66,7 +68,9 @@ public class SubscriptionExpirationService : IHostedService, IDisposable
 
         foreach (var order in expiredOrders)
         {
-            await userManager.RemoveFromRoleAsync(order.User, Constants.RoleNames.Subscriber);
+            var user = await userManager.FindByIdAsync(order.User.Id);
+            await userManager.RemoveFromRoleAsync(user, Constants.RoleNames.Subscriber);
+            
             order.IsActive = false;
             await orderService.UpdateAsync(order);
 
@@ -79,7 +83,7 @@ public class SubscriptionExpirationService : IHostedService, IDisposable
                     User = order.User,
                     CreatedOn = DateTime.Now,
                     ActivatedOn = DateTime.Today,
-                    ExpiresOn = DateTime.Today.AddMonths(1),
+                    ExpiresOn = DateTime.Today.AddDays(order.Plan.Days),
                     IsActive = true
                 };
                 
@@ -104,10 +108,7 @@ public class SubscriptionExpirationService : IHostedService, IDisposable
     
     private bool InvoiceStillActive(Order order)
     {
-        if (order.Invoice.IsCanceled)
-            return false;
-
-        return true;
+        return !order.Invoice.IsCanceled;
     }
 
     public Task StopAsync(CancellationToken cancellationToken)

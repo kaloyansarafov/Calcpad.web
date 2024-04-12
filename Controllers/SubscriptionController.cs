@@ -78,16 +78,18 @@ namespace Calcpad.web.Controllers
                 return View(order);
             }
             
+            var plan = await _context.SubscriptionPlans.FirstOrDefaultAsync(m => m.Id == id);
+            
             order.PlanId = id;
-            order.Plan = await _context.SubscriptionPlans.FirstOrDefaultAsync(m => m.Id == id);
+            order.Plan = plan;
             order.User = user;
             order.CreatedOn = DateTime.Now;
-            order.ExpiresOn = order.ActivatedOn.AddMonths(1);
+            order.ExpiresOn = order.ActivatedOn.AddDays(plan.Days);
             order.IsActive = false;
 
             var invoice = new Invoice
             {
-                InvoiceNumber = new Random().Next(1000, 9999),
+                InvoiceNumber = (await _context.Invoices.OrderByDescending(i => i.InvoiceNumber).FirstOrDefaultAsync())?.InvoiceNumber + 1 ?? 1,
                 NetAmmount = order.Plan.Price,
                 TaxAmmount = order.Plan.Price * 0.21m,
                 CreatedDate = DateTime.Now,
