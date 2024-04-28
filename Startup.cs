@@ -84,9 +84,9 @@ namespace Calcpad.web
             {
                 using (var serviceScope = app.ApplicationServices.CreateScope())
                 {
-                    //var dbContext = serviceScope.ServiceProvider.GetRequiredService<ApplicationDbContext>();
-                    //dbContext.Database.Migrate();
-                    //new ApplicationDbContextSeeder().SeedAsync(dbContext, serviceScope.ServiceProvider).GetAwaiter().GetResult();
+                    var dbContext = serviceScope.ServiceProvider.GetRequiredService<ApplicationDbContext>();
+                    dbContext.Database.Migrate();
+                    new ApplicationDbContextSeeder().SeedAsync(dbContext, serviceScope.ServiceProvider).GetAwaiter().GetResult();
                 }
                 app.UseDeveloperExceptionPage();
             }
