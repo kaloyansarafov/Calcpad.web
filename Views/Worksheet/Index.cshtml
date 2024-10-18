@@ -10,7 +10,7 @@
     string slug = TextHelper.SeoFriendly(Model.Category.Name);
 
     bool isDev = isGet && User.Identity.IsAuthenticated && User.IsInRole(Constants.RoleNames.Developer);
-    bool isLocked = !(User.Identity.IsAuthenticated && User.IsInRole(Constants.RoleNames.Subscriber) || Model.IsFree);
+    bool isLocked = !((User.Identity.IsAuthenticated && User.IsInRole(Constants.RoleNames.Subscriber)) || Model.IsFree);
 }
 @section meta{
     <meta name="description" content="Online math and engineering calculations worksheets.">
@@ -43,7 +43,7 @@
     <div class="card border-danger">
         <div class="card-header bg-danger"><p class="h4 text-white"><i class="icofont-lock"></i> This worksheet is locked!</p></div>
         <div class="card-body">
-            <span>Please <a class="lead" asp-area="Identity" asp-page="/Account/Login">Log into</a> your account. If you still don't have one, then <a class="lead" asp-area="Identity" asp-page="/Account/Register">Register</a> and get <span class="lead">free access</span> to all available worksheets.</span>
+            <span>Please <a class="lead" asp-area="Identity" asp-page="/Account/Login">Log into</a> your account. If you still don't have one, then <a class="lead" asp-area="Identity" asp-page="/Account/Register">Register</a> and get <span class="lead">paid access</span> to all available worksheets.</span>
         </div>
     </div>
 }

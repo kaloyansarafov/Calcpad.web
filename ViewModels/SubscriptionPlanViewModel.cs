@@ -14,7 +14,7 @@ namespace Calcpad.web.ViewModels
         public string Description { get; set; }
 
         [Required]
-        public byte Months { get; set; }
+        public byte Days { get; set; }
 
         [Required]
         public Decimal Price { get; set; }
